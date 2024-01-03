@@ -10,8 +10,9 @@ import {
   Legend,
 } from "recharts";
 import styled from "styled-components";
-import CustomLegend from "./component/chart/CustomLegend";
-import CustomeFilter from "./component/chart/CustomeFilter";
+import CustomLegend from "../component/chart/CustomLegend";
+import CustomeFilter from "../component/chart/CustomeFilter";
+import CustomTooltip from "../component/chart/CustomTooltip";
 
 const initialData = [
   {
@@ -148,7 +149,7 @@ export default function Main() {
               tickLine={false}
               axisLine={false}
             />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             {showAmt && (
               <Bar dataKey="amt" barSize={20} fill="#8884d8" name="Amt" />
             )}
