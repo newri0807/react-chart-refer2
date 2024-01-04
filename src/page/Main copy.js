@@ -1,52 +1,18 @@
 import React, { useEffect, useState } from "react";
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 import CustomLegend from "../component/chart/CustomLegend";
 import CustomeFilter from "../component/chart/CustomeFilter";
-import CustomChart from "../component/chart/CustomChart";
-import CustomTable from "../component/chart/CustomTable";
+import CustomTooltip from "../component/chart/CustomTooltip";
 
 const initialData = [
-  {
-    name: "Page A",
-    date: "2024-01-01",
-    uv: 590,
-    pv: 800,
-    amt: 1400,
-  },
-  {
-    name: "Page B",
-    date: "2024-01-02",
-    uv: 868,
-    pv: 967,
-    amt: 1506,
-  },
-  {
-    name: "Page C",
-    date: "2024-01-04",
-    uv: 1397,
-    pv: 1098,
-    amt: 989,
-  },
-  {
-    name: "Page D",
-    date: "2024-04-04",
-    uv: 1480,
-    pv: 1200,
-    amt: 1228,
-  },
-  {
-    name: "Page E",
-    date: "2024-05-05",
-    uv: 1520,
-    pv: 1108,
-    amt: 1100,
-  },
-  {
-    name: "Page F",
-    date: "2024-07-06",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-  },
   {
     name: "Page A",
     date: "2024-01-01",
@@ -153,29 +119,56 @@ export default function Main() {
         setInitialDates={setInitialDates}
         setSearchTerm={setSearchTerm}
       />
-      {/* 차트 */}
-      <CustomChart
-        data={data}
-        settings={{
-          amt: { show: showAmt, color: "#8884d8" },
-          pv: { show: showPv, color: "#413ea0" },
-          uv: { show: showUv, color: "#ff7300" },
-        }}
-        chartStyle={chartStyle}
-      />
-      <CustomLegend
-        showAmt={showAmt}
-        showPv={showPv}
-        showUv={showUv}
-        toggleShow={toggleShow}
-      />
-      {/* 테이블 */}
-      <CustomTable
-        data={data}
-        startDate={startDate}
-        endDate={endDate}
-        searchTerm={searchTerm}
-      />
+
+      <div style={{ width: "100%", height: 400 }}>
+        <ResponsiveContainer>
+          <ComposedChart
+            width={700}
+            height={300}
+            data={data}
+            margin={{
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20,
+            }}
+          >
+            <CartesianGrid stroke="#f5f5f5" />
+            <XAxis
+              dataKey="date"
+              style={chartStyle}
+              interval={
+                data?.length >= 30 ? parseInt(`${data.length / 30}`) : 0
+              }
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              style={chartStyle}
+              interval={0}
+              tickLine={false}
+              axisLine={false}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            {showAmt && (
+              <Bar dataKey="amt" barSize={20} fill="#8884d8" name="Amt" />
+            )}
+            {showPv && (
+              <Bar dataKey="pv" barSize={20} fill="#413ea0" name="Pv" />
+            )}
+            {showUv && (
+              <Bar dataKey="uv" barSize={20} fill="#ff7300" name="Uv" />
+            )}
+          </ComposedChart>
+        </ResponsiveContainer>
+
+        <CustomLegend
+          showAmt={showAmt}
+          showPv={showPv}
+          showUv={showUv}
+          toggleShow={toggleShow}
+        />
+      </div>
     </>
   );
 }

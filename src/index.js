@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Main from "./page/Main";
+import Draft from "./page/Draft";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -12,7 +13,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     errorElement: <div>Error Page 😭</div>,
-    children: [{ index: true, path: "/", element: <Main /> }],
+    children: [
+      { index: true, path: "/", element: <Main /> },
+      { path: "/2", element: <Draft /> },
+    ],
   },
 ]);
 
