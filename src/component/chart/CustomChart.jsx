@@ -7,6 +7,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  BarChart,
 } from "recharts";
 import CustomTooltip from "./CustomTooltip";
 
@@ -15,7 +16,7 @@ const CustomChart = ({ data, settings, chartStyle }) => {
   return (
     <div style={{ width: "100%", height: 400 }}>
       <ResponsiveContainer>
-        <ComposedChart
+        <BarChart
           width={700}
           height={300}
           data={data}
@@ -52,7 +53,7 @@ const CustomChart = ({ data, settings, chartStyle }) => {
               />
             ) : null
           )}
-        </ComposedChart>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

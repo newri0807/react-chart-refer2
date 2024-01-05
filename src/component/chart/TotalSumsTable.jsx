@@ -1,26 +1,4 @@
 import React from "react";
-import styled from "styled-components";
-
-// Styled components
-const TotalsTable = styled.table`
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
-`;
-
-const TotalsRow = styled.tr`
-  background-color: #f1f1f1;
-`;
-
-const TotalsHeader = styled.th`
-  padding: 10px;
-  border: 1px solid #ddd;
-`;
-
-const TotalsCell = styled.td`
-  padding: 10px;
-  border: 1px solid #ddd;
-`;
 
 const TotalSumsTable = ({ data }) => {
   // Determine the keys for numeric values
@@ -40,22 +18,27 @@ const TotalSumsTable = ({ data }) => {
   const totals = calculateTotals();
 
   return (
-    <TotalsTable>
-      <thead>
-        <TotalsRow>
-          {sumKeys.map((key) => (
-            <TotalsHeader key={key}>{key.toUpperCase()}</TotalsHeader>
-          ))}
-        </TotalsRow>
-      </thead>
+    <table className="w-full mt-20 border-collapse">
       <tbody>
-        <TotalsRow>
+        <tr className="bg-gray-300">
+          <th className="p-2 border border-gray-400" rowSpan="2">
+            Total
+          </th>
           {sumKeys.map((key) => (
-            <TotalsCell key={key}>{totals[key]}</TotalsCell>
+            <th key={key} className="p-2 border border-gray-400">
+              {key.toUpperCase()}
+            </th>
           ))}
-        </TotalsRow>
+        </tr>
+        <tr className="bg-gray-300">
+          {sumKeys.map((key) => (
+            <td key={key} className="p-2 border border-gray-400 text-center">
+              {totals[key]}
+            </td>
+          ))}
+        </tr>
       </tbody>
-    </TotalsTable>
+    </table>
   );
 };
 

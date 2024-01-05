@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Main from "./page/Main";
 import Draft from "./page/Draft";
+import Main2 from "./page/Main2";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -15,7 +16,8 @@ const router = createBrowserRouter([
     errorElement: <div>Error Page 😭</div>,
     children: [
       { index: true, path: "/", element: <Main /> },
-      { path: "/2", element: <Draft /> },
+      { path: "/2", element: <Main2 /> },
+      { path: "/3", element: <Draft /> },
     ],
   },
 ]);
