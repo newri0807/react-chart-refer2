@@ -81,7 +81,7 @@ const Editor = () => {
   const [desc, setDesc] = useState("");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState("");
   const [flag, setFlag] = useState(false);
   const [savedData, setSavedData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
@@ -100,16 +100,20 @@ const Editor = () => {
 
     fetchData();
   }, []);
+
   const customUploadAdapter = (loader) => {
     return {
       upload() {
         return new Promise((resolve) => {
           loader.file.then((file) => {
             console.log("2222", file);
+            // 이미지를 업로드하고 이미지 URL을 생성합니다.
             const imageUrl = URL.createObjectURL(file);
 
-            // Append new image to the image array
-            setImage((prevImages) => [...prevImages, file]);
+            if (!flag) {
+              setFlag(true);
+              setImage(file);
+            }
 
             resolve({ default: imageUrl });
           });
@@ -135,7 +139,7 @@ const Editor = () => {
         formData.append("title", title);
         formData.append("writer", author);
         formData.append("content", desc);
-        image.forEach((img, index) => formData.append(`image`, img));
+        formData.append("image", image);
 
         await saveData(formData);
         const response = await loadData();
@@ -156,12 +160,15 @@ const Editor = () => {
     if (selected) {
       setTitle(selected.title);
       setAuthor(selected.writer);
-      setDesc(updateImageSrc(selected.content, selected.image));
-      const imageUrls = selected.image.map(
-        (img) => `http://localhost:3000/${img}`
+      //setDesc(selected.content);
+      setDesc(
+        updateImageSrc(
+          selected.content,
+          `http://localhost:3000/${selected.image}`
+        )
       );
-      setImage(imageUrls.length > 0 ? imageUrls : []);
-
+      // 서버에 저장된 이미지 URL을 직접 사용합니다.
+      setImage(`http://localhost:3000/${selected.image}` || ""); // 이미지 URL이 없으면 빈 문자열로 설정
       setSelectedData(selected);
       setIsEditMode(true); // 편집 모드 활성화
     }
@@ -173,7 +180,7 @@ const Editor = () => {
       formData.append("title", title);
       formData.append("writer", author);
       formData.append("content", desc);
-      image.forEach((img, index) => formData.append(`image`, img));
+      formData.append("image", image); // 이미지 파일을 FormData에 추가합니다.
 
       console.log(
         "total",
@@ -221,25 +228,20 @@ const Editor = () => {
     }
   };
 
-  function updateImageSrc(content, imageUrls) {
-    // Ensure imageUrls is always an array
-    if (!Array.isArray(imageUrls)) {
-      console.warn("updateImageSrc called without imageUrls array");
-      return content; // Return the original content if imageUrls is not an array
-    }
-
+  function updateImageSrc(data, url) {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
+    const doc = parser.parseFromString(data, "text/html");
     const images = doc.querySelectorAll("img");
 
-    images.forEach((image, index) => {
+    images.forEach((image) => {
       const originalSrc = image.getAttribute("src");
-      if (originalSrc && originalSrc.startsWith("blob:") && imageUrls[index]) {
-        console.log("Replacing src for image:", imageUrls[index]);
-        image.setAttribute("src", `http://localhost:3000/${imageUrls[index]}`);
+      if (originalSrc && originalSrc.startsWith("blob:")) {
+        console.log("newSrc", url);
+        image.setAttribute("src", url);
       }
     });
 
+    // 변경된 내용을 다시 HTML 문자열로 반환합니다.
     return doc.body.innerHTML;
   }
 
