@@ -140,6 +140,9 @@ const Editor = () => {
         await saveData(formData);
         const response = await loadData();
         setSavedData(response.data);
+
+        // 입력 필드 초기화
+        resetInputFields();
       } catch (error) {
         console.error("Failed to save data:", error);
       }
@@ -157,9 +160,7 @@ const Editor = () => {
       setTitle(selected.title);
       setAuthor(selected.writer);
       setDesc(updateImageSrc(selected.content, selected.image));
-      const imageUrls = selected.image.map(
-        (img) => `http://localhost:3000/${img}`
-      );
+      const imageUrls = selected.image.map((img) => img);
       setImage(imageUrls.length > 0 ? imageUrls : []);
 
       setSelectedData(selected);
@@ -205,6 +206,7 @@ const Editor = () => {
     setDesc("");
     setImage("");
     setSelectedData(null);
+    setIsEditMode(false);
   };
 
   const handleDelete = async (index) => {
@@ -236,7 +238,7 @@ const Editor = () => {
       const originalSrc = image.getAttribute("src");
       if (originalSrc && originalSrc.startsWith("blob:") && imageUrls[index]) {
         console.log("Replacing src for image:", imageUrls[index]);
-        image.setAttribute("src", `http://localhost:3000/${imageUrls[index]}`);
+        image.setAttribute("src", `${imageUrls[index]}`);
       }
     });
 
